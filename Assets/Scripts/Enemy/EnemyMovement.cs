@@ -10,8 +10,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void Awake()
     {
+        //Cari game
         _player = GameObject.FindGameObjectWithTag("Player").transform;
 
+        //Mendapatkan Reference component
         _playerHealth = _player.GetComponent<PlayerHealth>();
         _enemyHealth = GetComponent<EnemyHealth>();
         _nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -20,12 +22,12 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        // TODO: Implement debounce for destination update
+        //Memindahkan posisi player
         if (_enemyHealth.currentHealth > 0 && _playerHealth.currentHealth > 0)
         {
             _nav.SetDestination(_player.position);
         }
-        else
+        else //Hentikan moving
         {
             _nav.enabled = false;
         }
