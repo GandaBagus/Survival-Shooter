@@ -18,8 +18,14 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _normalSpeed = speed;
+        
+        //mendapatkan nilai mask dari layer yang bernama Floor
         _floorMask = LayerMask.GetMask("Floor");
+        
+        //Mendapatkan komponen Animator
         _animator = GetComponent<Animator>();
+        
+        //Mendapatkan komponen Rigidbody
         _playerRigidbody = GetComponent<Rigidbody>();
     }
 
@@ -36,25 +42,33 @@ public class PlayerMovement : MonoBehaviour
         }
         
         _movement.Set(horizontal, 0f, vertical);
-
+        
+        //Menormalisasi nilai vector agar total panjang dari vector adalah 1
         _movement = _movement.normalized * speed * Time.deltaTime;
         
+         //Move to position
         _playerRigidbody.MovePosition(transform.position + _movement);
     }
 
     public void Turning()
     {
+    //Buat Ray dari posisi mouse di layar
         Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+        
+        //Buat raycast untuk floorHit
         RaycastHit floorHit;
-
+        
+        //Lakukan raycast
         if (Physics.Raycast(camRay, out floorHit, _camRayLength, _floorMask))
         {
+            //Mendapatkan vector daro posisi player dan posisi floorHit
             Vector3 playerToMouse = floorHit.point - transform.position;
             playerToMouse.y = 0f;
-
+            
+            //Mendapatkan look rotation baru ke hit position
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
             
+            //Rotasi player
             _playerRigidbody.MoveRotation(newRotation);
         }
     }
