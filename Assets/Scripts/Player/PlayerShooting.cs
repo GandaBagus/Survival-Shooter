@@ -24,7 +24,10 @@ public class PlayerShooting : MonoBehaviour
 
     private void Awake()
     {
+        //GetMask
         _shootableMask = LayerMask.GetMask("Shootable");
+        
+        //Mendapatkan Reference component
         _gunParticles = GetComponent<ParticleSystem>();
         _gunLine = GetComponent<LineRenderer>();
         _gunAudio = GetComponent<AudioSource>();
@@ -45,7 +48,10 @@ public class PlayerShooting : MonoBehaviour
 
     public void DisableEffects()
     {
+        //disable line renderer
         _gunLine.enabled = false;
+        
+        //disable light
         _gunLight.enabled = false;
     }
 
@@ -57,32 +63,42 @@ public class PlayerShooting : MonoBehaviour
 
         _timer = 0f;
 
+         //Play audio
         _gunAudio.Play();
-
+        
+        //enable Light
         _gunLight.enabled = true;
 
+        //Play gun particle
         _gunParticles.Stop();
         _gunParticles.Play();
 
+        //enable Line renderer dan set first position
         _gunLine.enabled = true;
         _gunLine.SetPosition(0, transform.position);
 
+        //Set posisi ray shoot dan direction
         _shootRay.origin = transform.position;
         _shootRay.direction = transform.forward;
 
+        //Lakukan raycast jika mendeteksi id nemy hit apapun
         if (Physics.Raycast(_shootRay, out _shootHit, range, _shootableMask))
         {
+            //Lakukan raycast hit hace component Enemyhealth
             var enemyHealth = _shootHit.collider.GetComponent<EnemyHealth>();
 
             if (enemyHealth != null)
             {
+                //Lakukan Take Damage
                 enemyHealth.TakeDamage(damagePerShot, _shootHit.point);
             }
-
+            
+            //Set line end position ke hit position
             _gunLine.SetPosition(1, _shootHit.point);
         }
         else
         {
+            //set line end position ke range freom barrel
             _gunLine.SetPosition(1, _shootRay.origin + _shootRay.direction * range);
         }
     }
