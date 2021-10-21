@@ -18,9 +18,14 @@ public class EnemyAttack : MonoBehaviour
 
     private void Awake()
     {
+        //Mencari game object dengan tag "Player"
         _player = GameObject.FindGameObjectWithTag("Player");
+        
+        //mendapatkan komponen player health
         _playerHealth = _player.GetComponent<PlayerHealth>();
         _enemyHealth = GetComponent<EnemyHealth>();
+        
+        //mendapatkan komponen Animator
         _anim = GetComponent<Animator>();
     }
 
@@ -33,23 +38,28 @@ public class EnemyAttack : MonoBehaviour
         {
             Attack();
         }
-
+        
+        //mentrigger animasi PlayerDead jika darah player kurang dari sama dengan 0
         if (_playerHealth.currentHealth <= 0)
         {
             _anim.SetTrigger(PlayerDead);
         }
     }
 
+     //Callback jika ada suatu object masuk kedalam trigger
     private void OnTriggerEnter(Collider other)
     {
+           //Set player in range
         if (other.gameObject == _player && other.isTrigger == false)
         {
             _playerInRange = true;
         }
     }
 
+    //Callback jika ada object yang keluar dari trigger
     private void OnTriggerExit(Collider other)
     {
+        //Set player not in range
         if (other.gameObject == _player)
         {
             _playerInRange = false;
@@ -59,8 +69,10 @@ public class EnemyAttack : MonoBehaviour
 
     private void Attack()
     {
+        //Reset timer
         _timer = 0f;
 
+        //Taking Damage
         if (_playerHealth.currentHealth > 0)
         {
             _playerHealth.TakeDamage(attackDamage);
