@@ -11,6 +11,7 @@ namespace Command
 
         public override void Execute()
         {
+            //Player menembak
             _playerShooting.Shoot();
         }
 
