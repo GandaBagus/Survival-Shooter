@@ -14,20 +14,24 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         spawnPoints.AddRange(spawnPointContainer.GetComponentsInChildren<Transform>());
+        //Mengeksekusi fungs Spawn setiap beberapa detik sesui dengan nilai spawnTime
         InvokeRepeating(nameof(Spawn), spawnTime, spawnTime);
     }
 
 
     private void Spawn()
     {
+        //Jika player telah mati maka tidak membuat enemy baru
         if (playerHealth.currentHealth <= 0f)
         {
             return;
         }
-
+        
+        //Mendapatkan nilai random
         var spawnPointIndex = Random.Range(0, spawnPoints.Count);
         var spawnEnemy = Random.Range(0, 3);
 
+         //Memduplikasi enemy
         Factory.FactoryMethod(spawnEnemy, spawnPoints[spawnPointIndex]);
     }
 }
